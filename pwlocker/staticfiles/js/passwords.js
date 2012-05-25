@@ -21,39 +21,36 @@ $(function(){
         }
     });
 
-    // define the collection of passwords
-    var PasswordCollection = Backbone.Collection.extend({
-        model: Password,
-        url: '/api/1.0/passwords/'
-    });
-
-    // instantiate a password collection
-    var Passwords = new PasswordCollection();
-
     // set up the view for a password
     var PasswordView = Backbone.View.extend({
         tagName: 'tr',
 
-        events: {
-            "mouseover .password": "showPassword",
-            "mouseout .password": "hidePassword"
-        },
+//        events: {
+//            "mouseover .password": "showPassword",
+//            "mouseout .password": "hidePassword"
+//        },
 
         render: function () {
-            console.log('Inside PasswordView.render.');
+            console.log('Inside PasswordView.render. Model is: ' + JSON.stringify(this.model.toJSON()));
             // template with ICanHaz.js (ich)
             this.el = ich.passwordRowTpl(this.model.toJSON());
-            console.log('Password rendered to ' + this.el);
+            console.log('Password rendered to ' + this.el.html());
             return this;
-        },
-
-        showPassword: function() {
-            this.model.showPassword();
-        },
-
-        hidePassword: function() {
-            this.model.hidePassword();
         }
+
+//        showPassword: function() {
+//            this.model.showPassword();
+//        },
+//
+//        hidePassword: function() {
+//            this.model.hidePassword();
+//        }
+    });
+
+    // define the collection of passwords
+    var PasswordCollection = Backbone.Collection.extend({
+        model: Password,
+        url: '/api/1.0/passwords/'
     });
 
     var AppView = Backbone.View.extend({
@@ -61,16 +58,17 @@ $(function(){
         el: $('#app'),
 
         initialize: function() {
-            
-            Passwords.bind('all', this.render, this);
-            Passwords.fetch();
+            // instantiate a password collection
+            this.passwords = new PasswordCollection();
+            this.passwords.bind('all', this.render, this);
+            this.passwords.fetch();
         },
 
         render: function () {
-            console.log('Inside AppView.render. Passwords.length = ' + Passwords.length);
+            console.log('Inside AppView.render. Passwords.length = ' + this.passwords.length);
 
             // template with ICanHaz.js (ich)
-            Passwords.each(function (password) {
+            this.passwords.each(function (password) {
                 $(this.el).append(new PasswordView({model: password}).render().el);
             }, this);
 
