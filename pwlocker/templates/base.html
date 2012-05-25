@@ -93,7 +93,7 @@
         </div>
     {% endblock %}
     <footer>
-        <p>&copy; <a href='http://{{ site.domain }}'>{{ site.name }}</a> 2011-{% now "Y" %}</p>
+        <p>&copy; <a href='http://{{ site.domain }}'>{{ site.name }}</a> {% now "Y" %}</p>
     </footer>
 </div>
     {% render_block "js" %}
