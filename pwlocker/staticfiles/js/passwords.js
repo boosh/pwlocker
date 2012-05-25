@@ -23,6 +23,10 @@ $(function(){
         // hide the password
         hidePassword: function() {
             this.set({"password": '********'});
+        },
+
+        remove: function() {
+            this.destroy();
         }
     });
 
@@ -32,7 +36,13 @@ $(function(){
         
         events: {
             "mouseover .password": "showPassword",
-            "mouseout .password": "hidePassword"
+            "mouseout .password": "hidePassword",
+            "click a.destroy" : "remove"
+        },
+
+        remove: function(event) {
+            event.stopImmediatePropagation();
+            this.model.remove();
         },
 
         render: function () {
@@ -66,21 +76,21 @@ $(function(){
         initialize: function() {
             // instantiate a password collection
             this.passwords = new PasswordCollection();
+
+            this.passwords.bind('add', this.addOne, this);
             this.passwords.bind('all', this.render, this);
+//            this.passwords.bind('change', this.render, this);
             this.passwords.fetch();
         },
 
-        render: function () {
-            // reset the html if we're refreshing the content
-            if (this.$el.html()) {
-                this.$el.html('');
-            }
+        addOne: function(password) {
+            this.$el.append(new PasswordView({model: password}).render().el);
+            return this;
+        },
 
-            // template with ICanHaz.js (ich)
-            this.passwords.each(function (password) {
-                this.$el.append(new PasswordView({model: password}).render().el);
-            }, this);
-
+        render: function() {
+            this.$el.html('');
+            this.passwords.each(this.addOne, this);
             return this;
         }
     });

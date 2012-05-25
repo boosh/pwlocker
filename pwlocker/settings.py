@@ -189,3 +189,5 @@ LOGIN_REDIRECT_URL = '/user/profile/'
 
 # where to redirect users to upon logging out
 LOGOUT_URL = "/"
+
+APPEND_SLASH = False
