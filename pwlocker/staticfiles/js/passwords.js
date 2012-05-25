@@ -10,6 +10,11 @@ $(function(){
             };
         },
 
+        initialize: function() {
+            this.set('clearPassword', this.get('password'));
+            this.hidePassword();
+        },
+
         // display the password
         showPassword: function() {
             this.set({"password": this.get('clearPassword')});
@@ -23,24 +28,30 @@ $(function(){
 
     // set up the view for a password
     var PasswordView = Backbone.View.extend({
-//        events: {
-//            "mouseover .password": "showPassword",
-//            "mouseout .password": "hidePassword"
-//        },
+        tagName: 'tr',
+        
+        events: {
+            "mouseover .password": "showPassword",
+            "mouseout .password": "hidePassword"
+        },
 
         render: function () {
             // template with ICanHaz.js (ich)
-            this.el = ich.passwordRowTpl(this.model.toJSON());
+            $(this.el).html(ich.passwordRowTpl(this.model.toJSON()));
             return this;
-        }
+        },
 
-//        showPassword: function() {
-//            this.model.showPassword();
-//        },
-//
-//        hidePassword: function() {
-//            this.model.hidePassword();
-//        }
+        showPassword: function(event) {
+            event.stopImmediatePropagation();
+            console.log('Showing pw for ' + this.model.get('title'));
+            this.model.showPassword();
+        },
+
+        hidePassword: function(event) {
+            event.stopImmediatePropagation();
+            console.log('Hiding pw for ' + this.model.get('title'));
+            this.model.hidePassword();
+        }
     });
 
     // define the collection of passwords
@@ -60,9 +71,14 @@ $(function(){
         },
 
         render: function () {
+            // reset the html if we're refreshing the content
+            if (this.$el.html()) {
+                this.$el.html('');
+            }
+
             // template with ICanHaz.js (ich)
             this.passwords.each(function (password) {
-                $(this.el).append(new PasswordView({model: password}).render().el);
+                this.$el.append(new PasswordView({model: password}).render().el);
             }, this);
 
             return this;
