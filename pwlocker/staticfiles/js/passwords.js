@@ -11,18 +11,17 @@ $(function(){
         },
 
         initialize: function() {
-            this.set('clearPassword', this.get('password'));
             this.hidePassword();
         },
 
         // display the password
         showPassword: function() {
-            this.set({"password": this.get('clearPassword')});
+            this.set({"maskedPassword": this.get('password')});
         },
 
         // hide the password
         hidePassword: function() {
-            this.set({"password": '********'});
+            this.set({"maskedPassword": '********'});
         },
 
         remove: function() {
@@ -42,7 +41,10 @@ $(function(){
 
         remove: function(event) {
             event.stopImmediatePropagation();
-            this.model.remove();
+            if (confirm("Are you sure you want to delete this entry?"))
+            {
+                this.model.remove();
+            }
         },
 
         render: function () {
@@ -70,7 +72,7 @@ $(function(){
         url: '/api/1.0/passwords/'
     });
 
-    var AppView = Backbone.View.extend({
+    var PasswordListView = Backbone.View.extend({
         tagName: 'tbody',
 
         initialize: function() {
@@ -79,12 +81,16 @@ $(function(){
 
             this.passwords.bind('add', this.addOne, this);
             this.passwords.bind('all', this.render, this);
-//            this.passwords.bind('change', this.render, this);
             this.passwords.fetch();
         },
 
         addOne: function(password) {
             this.$el.append(new PasswordView({model: password}).render().el);
+            return this;
+        },
+
+        addNew: function(password) {
+            this.passwords.create(password);
             return this;
         },
 
@@ -95,6 +101,41 @@ $(function(){
         }
     });
 
+    var AppView = Backbone.View.extend({
+        el: '#app',
+        events: {
+            "click #passwordAdd": "addNew"
+        },
+
+        initialize: function() {
+            this.passwordList = new PasswordListView();
+        },
+
+        render: function() {
+            this.$el.find('table').append(this.passwordList.render().el);
+        },
+
+        addNew: function(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var form = $('#passwordAdd').closest('form');
+
+            var password = {
+                title: $(form).children('#id_title').val(),
+                username: $(form).children('#id_username').val(),
+                password: $(form).children('#id_password').val(),
+                url: $(form).children('#id_url').val(),
+                notes: $(form).children('#id_notes').val()
+            };
+
+            console.log(password);
+
+            this.passwordList.addNew(password);
+
+            return this;
+        }
+    });
+
     var app = new AppView();
-    $('#app').append(app.render().el);
+    app.render();
 });
