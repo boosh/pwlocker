@@ -1,0 +1,11 @@
+--- setup.py.orig	2012-02-14 13:38:18.000000000 +0000
++++ setup.py	2012-02-14 13:38:51.000000000 +0000
+@@ -34,7 +34,7 @@
+ # TIFF_ROOT = libinclude("/opt/tiff")
+ 
+ TCL_ROOT = None
+-JPEG_ROOT = None
++JPEG_ROOT = ('/usr/lib64', '/usr/include')
+ ZLIB_ROOT = None
+ TIFF_ROOT = None
+ FREETYPE_ROOT = None

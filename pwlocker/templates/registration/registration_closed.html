@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Registration temporarily closed" %}</h1>
+
+<p>
+{% blocktrans with site_name=site.name %}
+Registration has been temporarily suspended while we perform some essential
+system upgrades.
+{% endblocktrans %}
+</p>
+
+<p>{% trans "Please try again later" %}.</p>
+{% endblock %}

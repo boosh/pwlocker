@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Account activation failed" %}</h1>
+
+<p>
+    {% blocktrans %}
+    Sorry, we couldn't activate your account with the details you
+    provided. Please make sure you copied the link correctly, or
+    contact us if you need more help.
+    {% endblocktrans %}
+</p>
+
+{% endblock %}

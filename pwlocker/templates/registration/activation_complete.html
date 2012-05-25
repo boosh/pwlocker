@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Your account has been activated" %}</h1>
+
+<p>
+    {% blocktrans with site_name=site.name %}
+    Thanks for confirming your details. You may now log in and use
+    {{ site_name }}.
+    {% endblocktrans %}
+</p>
+
+{% endblock %}

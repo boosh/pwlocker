@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Thanks for registering" %}</h1>
+
+<p>
+{% blocktrans with site_name=site.name %}
+Thanks for creating an account with {{ site_name }}.
+{% endblocktrans %}
+</p>
+
+<p>
+{% blocktrans %}
+    We've sent you an email containing information about what you
+    need to do to activate your account. Please check your email
+    now.
+{% endblocktrans %}
+</p>
+
+{% endblock %}

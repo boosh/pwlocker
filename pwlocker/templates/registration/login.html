@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block container %}
+    <div class="content">
+        {% if form.errors %}
+            <div class="alert-message error fade in">
+                <a class="close" href="#">×</a>
+                <p><strong>{% trans "Log-in error!" %}</strong> {% trans "The details you entered were incorrect. Note that both fields are case-sensitive." %}</p>
+            </div>
+        {% endif %}
+        <form action="{% url django.contrib.auth.views.login %}" method="post" id="login-form">{% csrf_token %}
+            <fieldset>
+                <legend>{% trans 'Log in' %} (<a href="{% url registration_register %}">{% trans 'Sign up' %}</a>)</legend>
+                {% autoescape off %}
+                    {% for field in form %}
+                        {% include 'registration/form_field.html' %}
+                    {% endfor %}
+                {% endautoescape %}
+                <div class="actions">
+                    <input type="submit" class="btn primary" value="{% trans 'Log in' %}">&nbsp;
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

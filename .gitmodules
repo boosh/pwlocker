@@ -1,0 +1,3 @@
+[submodule "pwlocker/lib/vendor/lessphp"]
+	path = pwlocker/lib/vendor/lessphp
+	url = http://github.com/leafo/lessphp.git

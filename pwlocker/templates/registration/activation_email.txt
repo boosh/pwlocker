@@ -1,0 +1,13 @@
+{% load i18n %}
+{% trans "Hi" %} {{ user.first_name }},
+
+{% blocktrans with site_name=site.name %}
+Thanks for creating an account with {{ site_name }}. To complete
+your registration, please copy the link below into your browser:
+{% endblocktrans %}
+
+  {% url registration_activate activation_key %}
+
+{% blocktrans with site_name=site_name %}
+The {{ site_name }} Team
+{% endblocktrans %}

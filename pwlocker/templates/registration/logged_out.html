@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block container %}
+    <div class="content">
+        <h1>{% trans "You're logged out" %}</h1>
+        <p><a href="{% url django.contrib.auth.views.login %}">{% trans 'Log in again' %}</a></p>
+    </div>
+{% endblock %}

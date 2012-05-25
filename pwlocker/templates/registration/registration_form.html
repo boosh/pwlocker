@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load bootstrap_toolkit %}
+
+<div class="row">
+    <div class="span12">
+        <div class="page-header">
+                <h1>{% trans "Sign up" %}</h1>
+        </div>
+
+        <form action="{% url registration_register %}" method="post" id="registration_form">
+            <fieldset>
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-error">
+                        <strong>{% trans "There was a problem creating your account!" %}</strong>
+                            {% trans "Please fix the errors below." %}
+                    </div>
+                {% endif %}
+
+                {{ form|as_bootstrap }}
+                <div class="form-actions">
+                    <input type="submit" class="btn btn-large btn-primary" value="{% trans 'Sign up' %}" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
