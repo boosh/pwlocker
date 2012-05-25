@@ -12,9 +12,7 @@ class Password(models.Model):
     username = models.CharField(max_length=200,
         blank=True)
     password = models.CharField(max_length=200)
-    # djangorestframework adds its own field called 'url' to the
-    # representation of the object, so we need to use something else
-    site_url = models.URLField(max_length=500,
+    url = models.URLField(max_length=500,
         blank=True,
         verbose_name='Site URL')
     notes = models.TextField(
