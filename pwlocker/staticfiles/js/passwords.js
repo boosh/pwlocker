@@ -23,18 +23,14 @@ $(function(){
 
     // set up the view for a password
     var PasswordView = Backbone.View.extend({
-        tagName: 'tr',
-
 //        events: {
 //            "mouseover .password": "showPassword",
 //            "mouseout .password": "hidePassword"
 //        },
 
         render: function () {
-            console.log('Inside PasswordView.render. Model is: ' + JSON.stringify(this.model.toJSON()));
             // template with ICanHaz.js (ich)
             this.el = ich.passwordRowTpl(this.model.toJSON());
-            console.log('Password rendered to ' + this.el.html());
             return this;
         }
 
@@ -55,7 +51,6 @@ $(function(){
 
     var AppView = Backbone.View.extend({
         tagName: 'tbody',
-        el: $('#app'),
 
         initialize: function() {
             // instantiate a password collection
@@ -65,19 +60,15 @@ $(function(){
         },
 
         render: function () {
-            console.log('Inside AppView.render. Passwords.length = ' + this.passwords.length);
-
             // template with ICanHaz.js (ich)
             this.passwords.each(function (password) {
                 $(this.el).append(new PasswordView({model: password}).render().el);
             }, this);
 
-            console.log("Rendered to " + this.el);
             return this;
-//            this.el = ich.passwordAppTpl(Passwords);
         }
     });
 
     var app = new AppView();
-//    $('#app').html(app.el);
+    $('#app').append(app.render().el);
 });
