@@ -13,7 +13,7 @@ class PasswordResource(ModelResource):
     # django rest framework will overwrite our 'url' attribute with its own
     # that points to the resource, so we need to provide an alternative.
     include = ('resource_url',)
-    ignore_fields = ('created_at', 'updated_at', 'id')
+    ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword')
 
     def url(self, instance):
         """

@@ -3,19 +3,19 @@ $(function(){
 
     // Password model
     var Password = Backbone.Model.extend({
-//        initialize: function() {
-//            this.hidePassword();
-//        },
-//
-//        // display the password
-//        showPassword: function() {
-//            this.set({"maskedPassword": this.get('password')});
-//        },
-//
-//        // hide the password
-//        hidePassword: function() {
-//            this.set({"maskedPassword": '********'});
-//        },
+        initialize: function() {
+            this.hidePassword();
+        },
+
+        // display the password
+        showPassword: function() {
+            this.set({"maskedPassword": this.get('password')});
+        },
+
+        // hide the password
+        hidePassword: function() {
+            this.set({"maskedPassword": '********'});
+        },
 
         remove: function() {
             this.destroy();
@@ -43,8 +43,8 @@ $(function(){
         tagName: 'tr',
         
         events: {
-//            "mouseover .password": "showPassword",
-//            "mouseout .password": "hidePassword",
+            "mouseover .password": "showPassword",
+            "mouseout .password": "hidePassword",
             "click a.edit" : "editPassword",
             "click a.destroy" : "remove"
         },
@@ -70,19 +70,17 @@ $(function(){
             // template with ICanHaz.js (ich)
             $(this.el).html(ich.passwordRowTpl(this.model.toJSON()));
             return this;
-        }
+        },
 
-//        showPassword: function(event) {
-//            event.stopImmediatePropagation();
-//            console.log('Showing pw for ' + this.model.get('title'));
-//            this.model.showPassword();
-//        },
-//
-//        hidePassword: function(event) {
-//            event.stopImmediatePropagation();
-//            console.log('Hiding pw for ' + this.model.get('title'));
-//            this.model.hidePassword();
-//        }
+        showPassword: function(event) {
+            event.stopImmediatePropagation();
+            this.model.showPassword();
+        },
+
+        hidePassword: function(event) {
+            event.stopImmediatePropagation();
+            this.model.hidePassword();
+        }
     });
 
     // define the collection of passwords
