@@ -106,6 +106,26 @@ $(function(){
             return this;
         },
 
+        updatePassword: function(passwordData) {
+            var password = this.passwords.get(passwordData.id);
+            if (_.isObject(password))
+            {
+                // iterate through all the data in passwordData, setting it
+                // to the password model
+                for (var key in passwordData)
+                {
+                    // ignore the ID attribute
+                    if (key != 'id')
+                    {
+                        password.set(key, passwordData[key]);
+                    }
+                }
+
+                // persist the change
+                password.save();
+            }
+        },
+
         render: function() {
             this.$el.html('');
             this.passwords.each(this.addOne, this);
@@ -138,9 +158,13 @@ $(function(){
 
         /**
          * Allows users to update an existing password
+         *
+         * @param Password password: A Password Model of the password to edit.
          */
         editPassword: function(password) {
             this.prepareForm(password.toJSON());
+            // store the password ID as data on the modal itself
+            $('#passwordModal').data('passwordId', password.get('id'));
             $('#passwordModal').modal('show');
         },
 
@@ -176,7 +200,7 @@ $(function(){
             event.stopImmediatePropagation();
             var form = $('#passwordForm');
 
-            var password = {
+            var passwordData = {
                 title: $(form).find('#id_title').val(),
                 username: $(form).find('#id_username').val(),
                 password: $(form).find('#id_password').val(),
@@ -184,11 +208,23 @@ $(function(){
                 notes: $(form).find('#id_notes').val()
             };
 
-            // add or update the password
-            this.passwordList.addNew(password);
+            if ($('#passwordModal').data('passwordId'))
+            {
+                passwordData.id = $('#passwordModal').data('passwordId');
+                this.passwordList.updatePassword(passwordData);
+
+            }
+            else
+            {
+                // add or update the password
+                this.passwordList.addNew(passwordData);
+            }
 
             // clean up the form
             $('#passwordModal').modal('hide');
+            
+            // clear the reference to the ID of the password to edit
+            $('#passwordModal').data('passwordId', '');
 
             // form ready for the next invocation
             this.prepareForm()
