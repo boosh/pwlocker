@@ -43,6 +43,7 @@ $(function(){
 
         remove: function(event) {
             event.stopImmediatePropagation();
+            event.preventDefault();
             if (confirm("Are you sure you want to delete this entry?"))
             {
                 this.model.remove();
@@ -71,7 +72,12 @@ $(function(){
     // define the collection of passwords
     var PasswordCollection = Backbone.Collection.extend({
         model: Password,
-        url: '/api/1.0/passwords/'
+        url: '/api/1.0/passwords/',
+
+        // maintain ordering by password title
+        comparator: function(obj1, obj2) {
+            return obj1.get('title').localeCompare(obj2.get('title'));
+        }
     });
 
     /**
@@ -89,7 +95,6 @@ $(function(){
             // instantiate a password collection
             this.passwords = new PasswordCollection();
 
-            this.passwords.bind('add', this.addOne, this);
             this.passwords.bind('all', this.render, this);
             this.passwords.fetch();
         },
@@ -97,7 +102,7 @@ $(function(){
         addOne: function(password) {
             // pass a reference to the main application into the password view
             // so it can call methods on it
-            this.$el.prepend(new PasswordView({model: password, app: this.options.app}).render().el);
+            this.$el.append(new PasswordView({model: password, app: this.options.app}).render().el);
             return this;
         },
 
