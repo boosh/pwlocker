@@ -145,7 +145,8 @@ $(function(){
         el: '#app',
         events: {
             "click #passwordForm :submit": "handleModal",
-            "keydown #passwordForm": "handleModalOnEnter"
+            "keydown #passwordForm": "handleModalOnEnter",
+            "hidden #passwordModal": "prepareForm"
         },
 
         initialize: function() {
@@ -193,6 +194,10 @@ $(function(){
             $(form).find('#id_password').val(data.password);
             $(form).find('#id_url').val(data.url);
             $(form).find('#id_notes').val(data.notes);
+            
+            // clear any previous references to passwordId in case the user
+            // clicked the cancel button
+            $('#passwordModal').data('passwordId', '');
         },
 
         handleModal: function(event) {
@@ -212,7 +217,6 @@ $(function(){
             {
                 passwordData.id = $('#passwordModal').data('passwordId');
                 this.passwordList.updatePassword(passwordData);
-
             }
             else
             {
@@ -220,14 +224,8 @@ $(function(){
                 this.passwordList.addNew(passwordData);
             }
 
-            // clean up the form
+            // hide the modal
             $('#passwordModal').modal('hide');
-            
-            // clear the reference to the ID of the password to edit
-            $('#passwordModal').data('passwordId', '');
-
-            // form ready for the next invocation
-            this.prepareForm()
 
             return this;
         },
