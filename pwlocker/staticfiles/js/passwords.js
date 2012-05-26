@@ -3,26 +3,26 @@ $(function(){
 
     // Password model
     var Password = Backbone.Model.extend({
-        defaults: function() {
-            return {
-                // just return a default title
-                title: "Untitled"
-            };
-        },
+//        defaults: function() {
+//            return {
+//                // just return a default title
+//                title: "Untitled"
+//            };
+//        },
 
-        initialize: function() {
-            this.hidePassword();
-        },
-
-        // display the password
-        showPassword: function() {
-            this.set({"maskedPassword": this.get('password')});
-        },
-
-        // hide the password
-        hidePassword: function() {
-            this.set({"maskedPassword": '********'});
-        },
+//        initialize: function() {
+//            this.hidePassword();
+//        },
+//
+//        // display the password
+//        showPassword: function() {
+//            this.set({"maskedPassword": this.get('password')});
+//        },
+//
+//        // hide the password
+//        hidePassword: function() {
+//            this.set({"maskedPassword": '********'});
+//        },
 
         remove: function() {
             this.destroy();
@@ -85,7 +85,7 @@ $(function(){
         },
 
         addOne: function(password) {
-            this.$el.append(new PasswordView({model: password}).render().el);
+            this.$el.prepend(new PasswordView({model: password}).render().el);
             return this;
         },
 
