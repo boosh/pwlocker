@@ -27,8 +27,8 @@ $(function(){
         tagName: 'tr',
         
         events: {
-            "mouseover .password": "showPassword",
-            "mouseout .password": "hidePassword",
+//            "mouseover .password": "showPassword",
+//            "mouseout .password": "hidePassword",
             "click a.edit" : "editPassword",
             "click a.destroy" : "remove"
         },
@@ -36,7 +36,7 @@ $(function(){
         editPassword: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            alert(event);
+            alert('event for ' + this.model.get('id'));
         },
 
         remove: function(event) {
@@ -51,19 +51,19 @@ $(function(){
             // template with ICanHaz.js (ich)
             $(this.el).html(ich.passwordRowTpl(this.model.toJSON()));
             return this;
-        },
-
-        showPassword: function(event) {
-            event.stopImmediatePropagation();
-            console.log('Showing pw for ' + this.model.get('title'));
-            this.model.showPassword();
-        },
-
-        hidePassword: function(event) {
-            event.stopImmediatePropagation();
-            console.log('Hiding pw for ' + this.model.get('title'));
-            this.model.hidePassword();
         }
+
+//        showPassword: function(event) {
+//            event.stopImmediatePropagation();
+//            console.log('Showing pw for ' + this.model.get('title'));
+//            this.model.showPassword();
+//        },
+//
+//        hidePassword: function(event) {
+//            event.stopImmediatePropagation();
+//            console.log('Hiding pw for ' + this.model.get('title'));
+//            this.model.hidePassword();
+//        }
     });
 
     // define the collection of passwords
@@ -72,10 +72,18 @@ $(function(){
         url: '/api/1.0/passwords/'
     });
 
+    /**
+     * Manages the list of passwords and related data. Events are only for
+     * child nodes of the generated element.
+     */
     var PasswordListView = Backbone.View.extend({
         tagName: 'tbody',
 
-        initialize: function() {
+        /**
+         * Constructor. Takes a reference to the parent view so we can invoke
+         * methods on it.
+         */
+        initialize: function(options) {
             // instantiate a password collection
             this.passwords = new PasswordCollection();
 
@@ -85,7 +93,9 @@ $(function(){
         },
 
         addOne: function(password) {
-            this.$el.prepend(new PasswordView({model: password}).render().el);
+            // pass a reference to the main application into the password view
+            // so it can call methods on it
+            this.$el.prepend(new PasswordView({model: password, app: this.app}).render().el);
             return this;
         },
 
@@ -101,29 +111,30 @@ $(function(){
         }
     });
 
+    /**
+     * View for the overall application. We need this because backbone can only
+     * bind events for children of 'el'.
+     *
+     * In our template our modal is inside #app, so this class handles
+     * interaction at the application level rather than strictly with a
+     * collection of Passwords (that's the job of the PasswordListView).
+     */
     var AppView = Backbone.View.extend({
         el: '#app',
         events: {
-            "click #passwordForm :submit": "addNew",
-            "keydown #passwordForm": "addNewOnEnter"
+            "click #passwordForm :submit": "handleModal",
+            "keydown #passwordForm": "handleModalOnEnter"
         },
 
         initialize: function() {
-            this.passwordList = new PasswordListView();
+            this.passwordList = new PasswordListView({app: this});
         },
 
         render: function() {
             this.$el.find('table').append(this.passwordList.render().el);
         },
 
-        addNewOnEnter: function(event) {
-            if (event.keyCode == 13)
-            {
-                return this.addNew(event);
-            }
-        },
-
-        addNew: function(event) {
+        handleModal: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
             var form = $('#passwordForm');
@@ -136,7 +147,10 @@ $(function(){
                 notes: $(form).find('#id_notes').val()
             };
 
+            // add or update the password
             this.passwordList.addNew(password);
+
+            // clean up the form
             $('#passwordModal').modal('hide');
 
             // form ready for the next invocation
@@ -147,6 +161,14 @@ $(function(){
             $(form).find('#id_notes').val('');
 
             return this;
+        },
+
+        handleModalOnEnter: function(event) {
+            // process the modal if the user pressed the ENTER key
+            if (event.keyCode == 13)
+            {
+                return this.handleModal(event);
+            }
         }
     });
 
