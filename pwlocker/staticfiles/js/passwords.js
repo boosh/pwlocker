@@ -104,7 +104,7 @@ $(function(){
     var AppView = Backbone.View.extend({
         el: '#app',
         events: {
-            "click #passwordAdd": "addNew"
+            "click #passwordFormSubmit": "addNew"
         },
 
         initialize: function() {
@@ -118,19 +118,18 @@ $(function(){
         addNew: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            var form = $('#passwordAdd').closest('form');
+            var form = $('#passwordFormSubmit').closest('form');
 
             var password = {
-                title: $(form).children('#id_title').val(),
-                username: $(form).children('#id_username').val(),
-                password: $(form).children('#id_password').val(),
-                url: $(form).children('#id_url').val(),
-                notes: $(form).children('#id_notes').val()
+                title: $(form).find('#id_title').val(),
+                username: $(form).find('#id_username').val(),
+                password: $(form).find('#id_password').val(),
+                url: $(form).find('#id_url').val(),
+                notes: $(form).find('#id_notes').val()
             };
 
-            console.log(password);
-
             this.passwordList.addNew(password);
+            $('#passwordModal').modal('hide');
 
             return this;
         }

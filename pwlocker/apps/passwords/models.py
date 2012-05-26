@@ -15,10 +15,9 @@ class Password(models.Model):
     url = models.URLField(max_length=500,
         blank=True,
         verbose_name='Site URL')
-    notes = models.TextField(
+    notes = models.CharField(
         max_length=500,
-        blank=True,
-        help_text='Any extra notes')
+        blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 
