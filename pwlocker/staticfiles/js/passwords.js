@@ -3,13 +3,6 @@ $(function(){
 
     // Password model
     var Password = Backbone.Model.extend({
-//        defaults: function() {
-//            return {
-//                // just return a default title
-//                title: "Untitled"
-//            };
-//        },
-
 //        initialize: function() {
 //            this.hidePassword();
 //        },
@@ -36,7 +29,14 @@ $(function(){
         events: {
             "mouseover .password": "showPassword",
             "mouseout .password": "hidePassword",
+            "click a.edit" : "editPassword",
             "click a.destroy" : "remove"
+        },
+
+        editPassword: function(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            alert(event);
         },
 
         remove: function(event) {
@@ -104,7 +104,8 @@ $(function(){
     var AppView = Backbone.View.extend({
         el: '#app',
         events: {
-            "click #passwordFormSubmit": "addNew"
+            "click #passwordFormSubmit": "addNew",
+            "keydown #passwordForm": "addNewOnEnter"
         },
 
         initialize: function() {
@@ -115,10 +116,17 @@ $(function(){
             this.$el.find('table').append(this.passwordList.render().el);
         },
 
+        addNewOnEnter: function(event) {
+            if (event.keyCode == 13)
+            {
+                return this.addNew(event);
+            }
+        },
+
         addNew: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            var form = $('#passwordFormSubmit').closest('form');
+            var form = $('#passwordForm');
 
             var password = {
                 title: $(form).find('#id_title').val(),
@@ -130,6 +138,13 @@ $(function(){
 
             this.passwordList.addNew(password);
             $('#passwordModal').modal('hide');
+
+            // form ready for the next invocation
+            $(form).find('#id_title').val('');
+            $(form).find('#id_username').val('');
+            $(form).find('#id_password').val('');
+            $(form).find('#id_url').val('');
+            $(form).find('#id_notes').val('');
 
             return this;
         }
