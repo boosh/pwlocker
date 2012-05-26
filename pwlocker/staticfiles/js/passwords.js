@@ -19,6 +19,22 @@ $(function(){
 
         remove: function() {
             this.destroy();
+        },
+
+        validate: function(attrs) {
+            if (attrs.title.length == 0 || attrs.password.length == 0)
+            {
+                return "Please enter a title and a password";
+            }
+
+            if (attrs.url)
+            {
+                var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+                if (!re.test(attrs.url))
+                {
+                    return "Please enter a valid URL";
+                }
+            }
         }
     });
 
@@ -128,6 +144,7 @@ $(function(){
 
                 // persist the change
                 password.save();
+                this.passwords.sort();
             }
         },
 
