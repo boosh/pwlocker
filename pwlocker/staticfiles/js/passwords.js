@@ -104,7 +104,7 @@ $(function(){
     var AppView = Backbone.View.extend({
         el: '#app',
         events: {
-            "click #passwordFormSubmit": "addNew",
+            "click #passwordForm :submit": "addNew",
             "keydown #passwordForm": "addNewOnEnter"
         },
 
