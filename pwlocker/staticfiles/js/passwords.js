@@ -36,7 +36,9 @@ $(function(){
         editPassword: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
-            alert('event for ' + this.model.get('id'));
+            // call back up to the main app passing the current model for it
+            // to allow a user to update the details
+            this.options.app.editPassword(this.model);
         },
 
         remove: function(event) {
@@ -95,7 +97,7 @@ $(function(){
         addOne: function(password) {
             // pass a reference to the main application into the password view
             // so it can call methods on it
-            this.$el.prepend(new PasswordView({model: password, app: this.app}).render().el);
+            this.$el.prepend(new PasswordView({model: password, app: this.options.app}).render().el);
             return this;
         },
 
@@ -134,6 +136,41 @@ $(function(){
             this.$el.find('table').append(this.passwordList.render().el);
         },
 
+        /**
+         * Allows users to update an existing password
+         */
+        editPassword: function(password) {
+            this.prepareForm(password.toJSON());
+            $('#passwordModal').modal('show');
+        },
+
+        /**
+         * Sets up the password form.
+         *
+         * @param object passwordData: An object containing data to use for the
+         * form values. Any fields not present will be set to defaults.
+         */
+        prepareForm: function(passwordData) {
+            passwordData = passwordData || {};
+            
+            var data = {
+                'title': '',
+                'username': '',
+                'password': '',
+                'url': '',
+                'notes': ''
+            };
+
+            $.extend(data, passwordData);
+
+            var form = $('#passwordForm');
+            $(form).find('#id_title').val(data.title);
+            $(form).find('#id_username').val(data.username);
+            $(form).find('#id_password').val(data.password);
+            $(form).find('#id_url').val(data.url);
+            $(form).find('#id_notes').val(data.notes);
+        },
+
         handleModal: function(event) {
             event.preventDefault();
             event.stopImmediatePropagation();
@@ -154,11 +191,7 @@ $(function(){
             $('#passwordModal').modal('hide');
 
             // form ready for the next invocation
-            $(form).find('#id_title').val('');
-            $(form).find('#id_username').val('');
-            $(form).find('#id_password').val('');
-            $(form).find('#id_url').val('');
-            $(form).find('#id_notes').val('');
+            this.prepareForm()
 
             return this;
         },
