@@ -130,7 +130,6 @@ INSTALLED_APPS = (
     'registration',
     'bootstrap_toolkit',
     'sekizai',
-    'longerusername',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'djangorestframework',
@@ -178,16 +177,16 @@ REGISTRATION_AUTO_LOGIN = True
 # clean up inactivated accounts
 ACCOUNT_ACTIVATION_DAYS = 14
 
-# max length of user names and email addresses
-MAX_USERNAME_LENGTH = 75
-
 # where users should be redirected to log in
 LOGIN_URL = "/accounts/login"
 
 # where to redirect users to after logging in
-LOGIN_REDIRECT_URL = '/user/profile/'
+LOGIN_REDIRECT_URL = '/passwords/'
 
 # where to redirect users to upon logging out
 LOGOUT_URL = "/"
+
+SESSION_COOKIE_AGE = 60*60
+SESSION_SAVE_EVERY_REQUEST = True
 
 APPEND_SLASH = False

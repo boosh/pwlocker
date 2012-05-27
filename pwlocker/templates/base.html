@@ -20,15 +20,6 @@
     {% render_block "css" %}
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- backbone -->
-    <script type="text/javascript" src="{{ STATIC_URL }}contrib/backbone/ICanHaz.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}contrib/backbone/json2.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}contrib/backbone/underscore-min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}contrib/backbone/backbone-min.js"></script>
-
-    <script type="text/javascript" src="{{ STATIC_URL }}/js/passwords.js"></script>
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -42,7 +33,7 @@
             <ul class="nav pull-right">
             {% if user.is_authenticated %}
                 <li>
-                    <p class="navbar-text">{% trans 'Hello' %} {{ user.first_name }}!</p>
+                    <p class="navbar-text">{% trans 'Hello' %} {{ user.username }}!</p>
                 </li>
                 <li><a href="{% url django.contrib.auth.views.logout %}">{% trans 'Log out' %}</a></li>
             {% else %}
@@ -50,7 +41,7 @@
                     <form action="{% url django.contrib.auth.views.login %}" 
                           method="post" class="navbar-form">
                         {% csrf_token %}
-                        <input class="input-small" name="username" id="id_username" type="text" placeholder="{% trans 'E-mail' %}">
+                        <input class="input-small" name="username" id="id_username" type="text" placeholder="{% trans 'Username' %}">
                         <input class="input-small" name="password" id="id_password" type="password" placeholder="{% trans 'Password' %}">
                         <button class="btn" type="submit">{% trans 'Log in' %}</button>
                     </form>
