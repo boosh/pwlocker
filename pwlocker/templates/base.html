@@ -35,7 +35,12 @@
                         {% endif %}
                         ><a href="{{ password_list_url }}">{% trans "Passwords" %}</a></li>
                 {% else %}
-                    <li><a href="{% url registration_register %}">Register</a></li>
+                    {% url registration_register as registration_register_url %}
+                    <li
+                        {% if request.path == registration_register_url %}
+                        class="active"
+                        {% endif %}
+                        ><a href="">Register</a></li>
                 {% endif %}
             </ul>
 
