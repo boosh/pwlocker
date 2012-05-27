@@ -23,7 +23,7 @@ from lib import *
 #
 
 # path to git repository
-env.repo_path = 'ssh://al@95.154.196.59/var/git/repos/healthcms.git'
+env.repo_path = 'fill me in'
 
 # get the project name, e.g. healthcms
 env.project_name = os.path.basename(os.path.dirname(env.real_fabfile))
