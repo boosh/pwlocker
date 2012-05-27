@@ -8,7 +8,7 @@ class PasswordResource(ModelResource):
     model = Password
     # by default, django rest framework won't return the ID - backbone.js
     # needs it though, so don't exclude it
-    exclude = None
+    exclude = ('created_by',)
     ordering = ('-title',)
     # django rest framework will overwrite our 'url' attribute with its own
     # that points to the resource, so we need to provide an alternative.

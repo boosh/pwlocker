@@ -6,8 +6,7 @@ class Password(models.Model):
     """
     Represents a username and password together with several other fields
     """
-#    owner = models.ForeignKey(User, related_name='created_by',
-#        editable=False)
+    created_by = models.ForeignKey(User, related_name='+', editable=False)
     title = models.CharField(max_length=200)
     username = models.CharField(max_length=200,
         blank=True)
