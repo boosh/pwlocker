@@ -27,7 +27,16 @@
         <div class="container">
             <a class="brand" href="{% url home %}">{{ site.name }}</a>
             <ul class="nav">
-                <li class="active"><a href="{% url home %}">{% trans "Home" %}</a></li>
+                {% if user.is_authenticated %}
+                    {% url password_list as password_list_url %}
+                    <li
+                        {% if request.path == password_list_url %}
+                        class="active"
+                        {% endif %}
+                        ><a href="{{ password_list_url }}">{% trans "Passwords" %}</a></li>
+                {% else %}
+                    <li><a href="{% url registration_register %}">Register</a></li>
+                {% endif %}
             </ul>
 
             <ul class="nav pull-right">
@@ -57,32 +66,41 @@
             <br />
             <br />
             {% block content %}
-            <div class="page-header">
-                <h1>{{ site.name }} <small>{% trans "Sample using Bootstrap from Twitter with django-registration" %}</small></h1>
+            <h1 class="page-header">Password locker <small>{% trans "Demonstrating Django and Backbone.js" %}</small></h1>
+
+            <div class="row">
+                <div class="span8">
+                    <p>This application demonstrates how to create a web application
+                        using Django and Backbone.js.</p>
+
+                    <p>Sometimes you need to be able to share passwords between
+                        a team. For example when running a web site, the developers
+                        might need to share passwords to the web servers, demo
+                        email accounts, demo user accounts, etc. This application
+                        lets you do just that.</p>
+
+                    <p>
+                        Follow
+                        <a href="http://10kblogger.wordpress.com/2012/05/25/a-restful-password-locker-with-django-and-backbone-js/">the tutorial</a>
+                        to see how this site was made. You can also check out the code
+                        at the <a href="https://github.com/boosh/pwlocker">github repository</a>.
+                    </p>
+
+                    <div class="alert alert-info">
+                        <h4 class="alert-heading">For demonstration purposes only!</h4>
+                        <p>This is a demo application and may not be completely
+                            secure. Please don't use it to store real data.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="span4">
+                    <div class="well">
+                        <a href="{% url registration_register %}"
+                            class="btn btn-primary btn-large">Register</a>
+                    </div>
+                </div>
             </div>
-            <ul>
-                <li><a href="{% url django.contrib.auth.views.login %}">{% trans "Log in" %}</a></li>
-                <li><a href="{% url django.contrib.auth.views.logout %}">{% trans "Log out" %}</a></li>
-                <li><a href="{% url django.contrib.auth.views.password_change %}">{% trans "Change password" %}</a></li>
-                <li><a href="{% url django.contrib.auth.views.password_reset %}">{% trans "Reset my password" %}</a></li>
-            </ul>
-
-            <p>Django project that can be used as a foundation for other projects.
-            Includes the following:
-            </p>
-
-            <ul>
-                <li>Twitter Bootstrap integration</li>
-                <li>User authentication pre-configured</li>
-                <li><a href="{% url registration_register %}">User registration</a></li>
-            </ul>
-
-            <h2>Notes</h2>
-            <p>The 'simple' registration backend is used - this doesn't require
-            users to confirm their email addresses before using the service.
-            The 'default' registration backend will enforce this and can
-            be used by including urls from the 'default' backend in urls.py.</p>
-
             {% endblock %}
         </div>
     {% endblock %}
