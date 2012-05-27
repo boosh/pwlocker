@@ -261,4 +261,10 @@ $(function(){
 
     var app = new AppView();
     app.render();
+
+    // Setup $.ajax to always send an X-CSRFToken header:
+    var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
+    $(document).ajaxSend(function(e, xhr, settings) {
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+    });
 });
