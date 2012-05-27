@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     url(r'^api/1.0/', include('apps.api.urls')),
 
     # override the default log-in form
-    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^accounts/login$', 'django.contrib.auth.views.login'),
 
     (r'', include('django.contrib.auth.urls')),
 
