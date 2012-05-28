@@ -20,7 +20,7 @@ class Password(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
     shares = models.ManyToManyField('PasswordContact',
-        verbose_name='Share with')
+        verbose_name='Share with', blank=True)
 
     def __unicode__(self):
         return self.title

@@ -230,20 +230,37 @@ $(function(){
 
             $.extend(data, passwordData);
 
-            // create an array of the selected shares
-            var shares = new Array();
-            _.each(data.shares, function(obj){
-                shares.push(obj.id);
-            }, shares);
-
             var form = $('#passwordForm');
             $(form).find('#id_title').val(data.title);
             $(form).find('#id_username').val(data.username);
             $(form).find('#id_password').val(data.password);
             $(form).find('#id_url').val(data.url);
             $(form).find('#id_notes').val(data.notes);
-            $(form).find('#id_shares').val(shares);
-            
+
+            // create an array of the selected shares
+            var shares = _.map(data.shares, function(elem){
+                return elem.id;
+            });
+
+            console.log('share: ' + shares);
+            var value;
+            $(form).find(':checkbox').each(function(){
+                value = $(this).attr('value');
+                // for each checkbox, see if the value is in the 'shares' array
+                for (var i in shares)
+                {
+                    if (value == shares[i])
+                    {
+                        console.log('checking ' + shares[i]);
+                        $(this).prop('checked', true);
+                        return;
+                    }
+                }
+
+                // otherwise uncheck it
+                $(this).prop('checked', false);
+            });
+
             // clear any previous references to passwordId in case the user
             // clicked the cancel button
             $('#passwordModal').data('passwordId', '');
@@ -260,7 +277,9 @@ $(function(){
                 password: $(form).find('#id_password').val(),
                 url: $(form).find('#id_url').val(),
                 notes: $(form).find('#id_notes').val(),
-                shares: $(form).find('#id_shares').val()
+                shares: $(form).find(':checked').map(function() {
+                    return $(this).attr('value');
+                }).get()
             };
 
             if ($('#passwordModal').data('passwordId'))
