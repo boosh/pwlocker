@@ -34,8 +34,9 @@ class PasswordResource(ModelResource):
     # django rest framework will overwrite our 'url' attribute with its own
     # that points to the resource, so we need to provide an alternative.
     include = ('resource_url',)
-    ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword')
-    fields = ('id', 'title', 'username', 'password', 'url', 'resource_url', 'shares')
+    ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword', 'resource_url')
+    fields = ('id', 'title', 'username', 'password', 'url', 'notes',
+        'resource_url', 'shares')
 
     related_serializer = PasswordContactResource
 

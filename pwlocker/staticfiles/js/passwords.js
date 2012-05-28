@@ -230,12 +230,19 @@ $(function(){
 
             $.extend(data, passwordData);
 
+            // create an array of the selected shares
+            var shares = new Array();
+            _.each(data.shares, function(obj){
+                shares.push(obj.id);
+            }, shares);
+
             var form = $('#passwordForm');
             $(form).find('#id_title').val(data.title);
             $(form).find('#id_username').val(data.username);
             $(form).find('#id_password').val(data.password);
             $(form).find('#id_url').val(data.url);
             $(form).find('#id_notes').val(data.notes);
+            $(form).find('#id_shares').val(shares);
             
             // clear any previous references to passwordId in case the user
             // clicked the cancel button
@@ -252,7 +259,8 @@ $(function(){
                 username: $(form).find('#id_username').val(),
                 password: $(form).find('#id_password').val(),
                 url: $(form).find('#id_url').val(),
-                notes: $(form).find('#id_notes').val()
+                notes: $(form).find('#id_notes').val(),
+                shares: $(form).find('#id_shares').val()
             };
 
             if ($('#passwordModal').data('passwordId'))
