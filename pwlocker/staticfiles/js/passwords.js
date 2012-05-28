@@ -17,8 +17,10 @@ $(function(){
             this.set({"maskedPassword": '********'});
         },
 
-        remove: function() {
-            this.destroy();
+        remove: function(options) {
+            mergedOptions = {wait: true};
+            $.extend(mergedOptions, options);
+            this.destroy(mergedOptions);
         },
 
         validate: function(attrs) {
@@ -62,7 +64,15 @@ $(function(){
             event.preventDefault();
             if (confirm("Are you sure you want to delete this entry?"))
             {
-                this.model.remove();
+                this.model.remove({error: function(model, response) {
+                        if (response.status == 403) {
+                            alert("You don't have permission to delete that data");
+                        }
+                        else {
+                            alert("Unable to delete that data");
+                        }
+                    }
+                });
             }
         },
 
@@ -113,6 +123,11 @@ $(function(){
             this.passwords.fetch();
         },
 
+        // make the model visible to external code
+        getModel: function() {
+            return this.passwords.model;
+        },
+
         addOne: function(password) {
             // pass a reference to the main application into the password view
             // so it can call methods on it
@@ -120,12 +135,15 @@ $(function(){
             return this;
         },
 
-        addNew: function(password) {
-            this.passwords.create(password);
+        addNew: function(password, options) {
+            mergedOptions = {wait: true};
+            $.extend(mergedOptions, options);
+            this.passwords.create(password, mergedOptions);
             return this;
         },
 
-        updatePassword: function(passwordData) {
+        updatePassword: function(passwordData, options) {
+            options = options || {};
             var password = this.passwords.get(passwordData.id);
             if (_.isObject(password))
             {
@@ -141,7 +159,7 @@ $(function(){
                 }
 
                 // persist the change
-                password.save();
+                password.save({}, options);
                 this.passwords.sort();
             }
         },
@@ -171,6 +189,15 @@ $(function(){
 
         initialize: function() {
             this.passwordList = new PasswordListView({app: this});
+        },
+
+        displayError: function(model, response) {
+            if (response.status == 403) {
+                alert("You don't have permission to edit that data");
+            }
+            else {
+                alert("Unable to create or edit that data. Please make sure you entered valid data.");
+            }
         },
 
         render: function() {
@@ -236,12 +263,12 @@ $(function(){
             if ($('#passwordModal').data('passwordId'))
             {
                 passwordData.id = $('#passwordModal').data('passwordId');
-                this.passwordList.updatePassword(passwordData);
+                this.passwordList.updatePassword(passwordData, { error: this.displayError });
             }
             else
             {
                 // add or update the password
-                this.passwordList.addNew(passwordData);
+                this.passwordList.addNew(passwordData, { error: this.displayError });
             }
 
             // hide the modal
