@@ -8,7 +8,7 @@ class UserResource(ModelResource):
     Lets users search for other users by username.
     """
     model = User
-    fields = ('id', 'first_name', 'last_name')
+    fields = ('id', 'first_name', 'last_name', 'username', 'url')
     ignore_fields = ('id',)
 
     def validate_request(self, data, files=None):

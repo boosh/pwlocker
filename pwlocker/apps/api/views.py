@@ -1,3 +1,4 @@
+from django.db.models import Q
 from djangorestframework.mixins import ModelMixin, InstanceMixin, \
 ReadModelMixin, DeleteModelMixin
 from djangorestframework.permissions import IsAuthenticated
@@ -73,7 +74,14 @@ class PasswordContactReadOrDeleteInstanceView(ReadOrDeleteInstanceModelView):
 
 class UserView(InstanceMixin, ReadModelMixin, ModelView):
     """
-    View for individual Users
+    View for individual Users lets users find other users by username
     """
     resource = UserResource
     permissions = (IsAuthenticated, )
+
+    def get_queryset(self):
+        """
+        Filter the current user from search results to prevent them sharing
+        with themselves.
+        """
+        return self.resource.model.objects.filter(~Q(id=self.user.id))

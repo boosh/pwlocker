@@ -1,6 +1,7 @@
 from djangorestframework.resources import ModelResource
 from django.core.urlresolvers import reverse
 
+from apps.users.resources import UserResource
 from models import Password, PasswordContact
 
 
@@ -46,7 +47,7 @@ class PasswordResource(ModelResource):
 class PasswordContactResource(ModelResource):
     model = PasswordContact
     ordering = ('to_user__first_name',)
-    fields = ('id', 'url', ('to_user', ('id', 'username', 'first_name', 'last_name')))
+    fields = ('id', 'url', ('to_user', 'UserResource'))
     ignore_fields = ('id',)
 
     def validate_request(self, data, files=None):

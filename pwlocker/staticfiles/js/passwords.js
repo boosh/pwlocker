@@ -123,11 +123,6 @@ $(function(){
             this.passwords.fetch();
         },
 
-        // make the model visible to external code
-        getModel: function() {
-            return this.passwords.model;
-        },
-
         addOne: function(password) {
             // pass a reference to the main application into the password view
             // so it can call methods on it
@@ -179,8 +174,8 @@ $(function(){
      * interaction at the application level rather than strictly with a
      * collection of Passwords (that's the job of the PasswordListView).
      */
-    var AppView = Backbone.View.extend({
-        el: '#app',
+    var PasswordPanelView = Backbone.View.extend({
+        el: '#passwordPanel',
         events: {
             "click #passwordForm :submit": "handleModal",
             "keydown #passwordForm": "handleModalOnEnter",
@@ -286,7 +281,7 @@ $(function(){
         }
     });
 
-    var app = new AppView();
+    var app = new PasswordPanelView();
     app.render();
 
     // Setup $.ajax to always send an X-CSRFToken header:
