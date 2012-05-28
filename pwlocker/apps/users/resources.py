@@ -9,7 +9,6 @@ class UserResource(ModelResource):
     """
     model = User
     fields = ('id', 'first_name', 'last_name', 'username', 'url')
-    ignore_fields = ('id',)
 
     def validate_request(self, data, files=None):
         """

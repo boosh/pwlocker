@@ -1,8 +1,28 @@
 from djangorestframework.resources import ModelResource
+from djangorestframework.serializer import Serializer
 from django.core.urlresolvers import reverse
 
 from apps.users.resources import UserResource
 from models import Password, PasswordContact
+
+
+class PasswordContactResource(ModelResource):
+    model = PasswordContact
+    ordering = ('to_user__first_name',)
+    fields = ('id', 'url', ('to_user', 'UserResource'), ('from_user', 'UserResource'))
+    ignore_fields = ('id',)
+
+    def validate_request(self, data, files=None):
+        """
+        Backbone.js will submit all fields in the model back to us, but
+        some fields are set as uneditable in our Django model. So we need
+        to remove those extra fields before performing validation.
+        """
+        for key in self.ignore_fields:
+            if key in data:
+                del data[key]
+
+        return super(PasswordContactResource, self).validate_request(data, files)
 
 
 class PasswordResource(ModelResource):
@@ -15,6 +35,9 @@ class PasswordResource(ModelResource):
     # that points to the resource, so we need to provide an alternative.
     include = ('resource_url',)
     ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword')
+    fields = ('id', 'title', 'username', 'password', 'url', 'resource_url', 'shares')
+
+    related_serializer = PasswordContactResource
 
     def url(self, instance):
         """
@@ -42,22 +65,3 @@ class PasswordResource(ModelResource):
                 del data[key]
 
         return super(PasswordResource, self).validate_request(data, files)
-
-
-class PasswordContactResource(ModelResource):
-    model = PasswordContact
-    ordering = ('to_user__first_name',)
-    fields = ('id', 'url', ('to_user', 'UserResource'))
-    ignore_fields = ('id',)
-
-    def validate_request(self, data, files=None):
-        """
-        Backbone.js will submit all fields in the model back to us, but
-        some fields are set as uneditable in our Django model. So we need
-        to remove those extra fields before performing validation.
-        """
-        for key in self.ignore_fields:
-            if key in data:
-                del data[key]
-
-        return super(PasswordContactResource, self).validate_request(data, files)

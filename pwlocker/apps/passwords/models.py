@@ -19,6 +19,7 @@ class Password(models.Model):
         blank=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
+    shares = models.ManyToManyField('PasswordContact')
 
     def __unicode__(self):
         return self.title
@@ -32,3 +33,6 @@ class PasswordContact(models.Model):
     to_user = models.ForeignKey(User, related_name="passwordcontactto")
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    def __unicode__(self):
+        return "%s" % self.to_user.username
