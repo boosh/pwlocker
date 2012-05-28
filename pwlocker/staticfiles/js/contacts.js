@@ -84,7 +84,6 @@ $(function(){
                 to_user: data.id
             };
 
-            console.log("Creating contact data");
             this.collection.create(contact, mergedOptions);
             return this;
         },
@@ -108,7 +107,7 @@ $(function(){
         el: '#contactPanel',
         events: {
             "click #contactPanel :submit": "handleSearch",
-            "keydown #contactPanel :input[type=text]": "handleSearchOnEnter",
+            "keydown #contactPanel :input[type=text]": "handleSearchOnEnter"
         },
 
         initialize: function() {
@@ -140,6 +139,7 @@ $(function(){
             // returns a user, create a new PasswordContact
             $.getJSON('/api/1.0/user/' + username, function success(data, textStatus, jqXHR) {
                 that.dataList.addNew(data);
+                $('#userSearch').val('');
             });
 
             // if not, display a message saying that user couldn't be found
