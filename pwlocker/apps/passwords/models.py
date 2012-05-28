@@ -22,3 +22,13 @@ class Password(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class PasswordContact(models.Model):
+    """
+    Someone with whom a user can share a Password
+    """
+    from_user = models.ForeignKey(User, related_name="passwordcontactfrom", editable=False)
+    to_user = models.ForeignKey(User, related_name="passwordcontactto")
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True, editable=False)

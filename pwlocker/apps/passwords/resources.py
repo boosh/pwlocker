@@ -1,7 +1,7 @@
 from djangorestframework.resources import ModelResource
 from django.core.urlresolvers import reverse
 
-from models import Password
+from models import Password, PasswordContact
 
 
 class PasswordResource(ModelResource):
@@ -41,3 +41,22 @@ class PasswordResource(ModelResource):
                 del data[key]
 
         return super(PasswordResource, self).validate_request(data, files)
+
+
+class PasswordContactResource(ModelResource):
+    model = PasswordContact
+    ordering = ('to_user__first_name',)
+    fields = ('id', 'url', ('to_user', ('id', 'username', 'first_name', 'last_name')))
+    ignore_fields = ('id',)
+
+    def validate_request(self, data, files=None):
+        """
+        Backbone.js will submit all fields in the model back to us, but
+        some fields are set as uneditable in our Django model. So we need
+        to remove those extra fields before performing validation.
+        """
+        for key in self.ignore_fields:
+            if key in data:
+                del data[key]
+
+        return super(PasswordContactResource, self).validate_request(data, files)

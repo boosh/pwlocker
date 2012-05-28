@@ -1,8 +1,10 @@
-from djangorestframework.mixins import ModelMixin
+from djangorestframework.mixins import ModelMixin, InstanceMixin, \
+ReadModelMixin, DeleteModelMixin
 from djangorestframework.permissions import IsAuthenticated
-from djangorestframework.views import ListOrCreateModelView, InstanceModelView
+from djangorestframework.views import ListOrCreateModelView, InstanceModelView, ModelView
 
-from apps.passwords.resources import PasswordResource
+from apps.passwords.resources import PasswordResource, PasswordContactResource
+from apps.users.resources import UserResource
 
 class RestrictToUserMixin(ModelMixin):
     """
@@ -37,3 +39,41 @@ class PasswordInstanceView(RestrictToUserMixin, InstanceModelView):
     resource = PasswordResource
     permissions = (IsAuthenticated, )
 
+
+class PasswordContactListView(ListOrCreateModelView):
+    """
+    List view for PasswordContact objects.
+    """
+    resource = PasswordContactResource
+    permissions = (IsAuthenticated, )
+
+    def get_instance_data(self, model, content, **kwargs):
+        """
+        Set the created_by field to the currently authenticated user.
+        """
+        content['from_user'] = self.user
+        return super(PasswordContactListView, self).get_instance_data(model, content, **kwargs)
+
+
+class ReadOrDeleteInstanceModelView(InstanceMixin, ReadModelMixin, DeleteModelMixin, ModelView):
+    """
+    A view which provides default operations for read/delete against a model instance
+    but that prevents updates.
+    """
+    _suffix = 'Instance'
+
+
+class PasswordContactReadOrDeleteInstanceView(ReadOrDeleteInstanceModelView):
+    """
+    View for individual PasswordContact instances
+    """
+    resource = PasswordContactResource
+    permissions = (IsAuthenticated, )
+
+
+class UserView(InstanceMixin, ReadModelMixin, ModelView):
+    """
+    View for individual Users
+    """
+    resource = UserResource
+    permissions = (IsAuthenticated, )
