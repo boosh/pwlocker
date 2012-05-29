@@ -138,11 +138,18 @@ $(function(){
             // perform a GET request to the userSearch service and if it
             // returns a user, create a new PasswordContact
             $.getJSON('/api/1.0/user/' + username, function success(data, textStatus, jqXHR) {
-                that.dataList.addNew(data);
-                $('#userSearch').val('');
-            });
+                that.dataList.addNew(data, {success: function() {
+                    $('#userSearch').val('');
 
-            // if not, display a message saying that user couldn't be found
+                    // update the form options
+                    $('#passwordForm').find(':checkbox').remove();
+                    $('#passwordForm').find('.checkbox').remove();
+
+                    that.dataList.collection.each(function(data){
+                        $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
+                    });
+                }});
+            });
 
             return this;
         },

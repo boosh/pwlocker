@@ -36,4 +36,4 @@ class PasswordContact(models.Model):
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 
     def __unicode__(self):
-        return "%s" % self.to_user.username
+        return "%s %s (%s)" % (self.to_user.first_name, self.to_user.last_name, self.to_user.username)
