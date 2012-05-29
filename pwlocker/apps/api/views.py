@@ -22,7 +22,7 @@ class RestrictPasswordToUserMixin(ModelMixin):
         authenticated user.
         """
         return self.resource.model.objects.filter(Q(created_by=self.user) |
-            Q(shares__to_user=self.user))
+            Q(shares__to_user=self.user)).distinct()
 
     def get_instance_data(self, model, content, **kwargs):
         """
@@ -31,6 +31,20 @@ class RestrictPasswordToUserMixin(ModelMixin):
         content['created_by'] = self.user
         return super(RestrictPasswordToUserMixin, self).get_instance_data(model, content, **kwargs)
 
+    def initial(self, request, *args, **kwargs):
+        """
+        Set the currently authenticated user on the resource
+        """
+        CurrentUserSingleton.set_user(request.user)
+        return super(ModelMixin, self).initial(request, *args, **kwargs)
+
+    def final(self, request, response, *args, **kargs):
+        """
+        Clear the current user singleton to make sure it doesn't leak
+        """
+        CurrentUserSingleton.set_user(None)
+        return super(ModelMixin, self).final(request, response, *args, **kargs)
+
 
 class PasswordListView(RestrictPasswordToUserMixin, ListOrCreateModelView):
     """
@@ -38,20 +52,6 @@ class PasswordListView(RestrictPasswordToUserMixin, ListOrCreateModelView):
     """
     resource = PasswordResource
     permissions = (IsAuthenticated, )
-
-    def initial(self, request, *args, **kwargs):
-        """
-        Set the currently authenticated user on the resource
-        """
-        CurrentUserSingleton.set_user(request.user)
-        return super(PasswordListView, self).initial(request, *args, **kwargs)
-
-    def final(self, request, response, *args, **kargs):
-        """
-        Clear the current user singleton to make sure it doesn't leak
-        """
-        CurrentUserSingleton.set_user(None)
-        return super(PasswordListView, self).final(request, response, *args, **kargs)
 
 
 class PasswordInstanceView(RestrictPasswordToUserMixin, InstanceModelView):
