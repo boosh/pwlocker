@@ -138,7 +138,8 @@ $(function(){
         },
 
         updatePassword: function(passwordData, options) {
-            options = options || {};
+            mergedOptions = {wait: true};
+            $.extend(mergedOptions, options);
             var password = this.passwords.get(passwordData.id);
             if (_.isObject(password))
             {
@@ -154,7 +155,7 @@ $(function(){
                 }
 
                 // persist the change
-                password.save({}, options);
+                password.save({}, mergedOptions);
                 this.passwords.sort();
             }
         },
@@ -187,6 +188,7 @@ $(function(){
         },
 
         displayError: function(model, response) {
+            var that = this;
             if (response.status == 403) {
                 alert("You don't have permission to edit that data");
             }

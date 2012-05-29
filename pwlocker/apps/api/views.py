@@ -2,6 +2,8 @@ from django.db.models import Q
 from djangorestframework.mixins import ModelMixin, InstanceMixin, \
 ReadModelMixin, DeleteModelMixin
 from djangorestframework.permissions import IsAuthenticated
+from djangorestframework.response import ErrorResponse
+from djangorestframework import status
 from djangorestframework.views import ListOrCreateModelView, InstanceModelView, ModelView
 
 from apps.passwords.models import PasswordContact
@@ -15,7 +17,8 @@ class RestrictPasswordToUserMixin(ModelMixin):
     """
     def get_queryset(self):
         """
-        Only return objects created by the currently authenticated user.
+        Only return objects created by, or shared with, the currently
+        authenticated user.
         """
         return self.resource.model.objects.filter(Q(created_by=self.user) |
             Q(shares__to_user=self.user))
@@ -42,6 +45,40 @@ class PasswordInstanceView(RestrictPasswordToUserMixin, InstanceModelView):
     """
     resource = PasswordResource
     permissions = (IsAuthenticated, )
+
+    def put(self, request, *args, **kwargs):
+        """
+        Only allow the creating user to modify an instance.
+        """
+        model = self.resource.model
+        query_kwargs = self.get_query_kwargs(request, *args, **kwargs)
+
+        try:
+            self.model_instance = self.get_instance(**query_kwargs)
+
+            if self.model_instance.created_by == self.user:
+                return super(RestrictPasswordToUserMixin, self).put(request, *args, **kwargs)
+        except model.DoesNotExist:
+            pass
+        
+        raise ErrorResponse(status.HTTP_401_UNAUTHORIZED, None, {})
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Only the creator should be able to delete an instance.
+        """
+        model = self.resource.model
+        query_kwargs = self.get_query_kwargs(request, *args, **kwargs)
+
+        try:
+            instance = self.get_instance(**query_kwargs)
+        except model.DoesNotExist:
+            raise ErrorResponse(status.HTTP_404_NOT_FOUND, None, {})
+
+        if instance.created_by == self.user:
+            instance.delete()
+        else:
+            raise ErrorResponse(status.HTTP_401_UNAUTHORIZED, None, {})
 
 
 class PasswordContactListView(ListOrCreateModelView):

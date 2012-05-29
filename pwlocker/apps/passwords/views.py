@@ -7,6 +7,6 @@ from forms import PasswordForm
 @login_required
 def password_list(request):
     context = RequestContext(request)
-    form = PasswordForm()
+    form = PasswordForm(request.user)
     context.update({'form': form})
     return render_to_response('passwords/password_list.html', context)
