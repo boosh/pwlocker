@@ -242,7 +242,6 @@ $(function(){
                 return elem.id;
             });
 
-            console.log('share: ' + shares);
             var value;
             $(form).find(':checkbox').each(function(){
                 value = $(this).attr('value');
@@ -251,7 +250,6 @@ $(function(){
                 {
                     if (value == shares[i])
                     {
-                        console.log('checking ' + shares[i]);
                         $(this).prop('checked', true);
                         return;
                     }
