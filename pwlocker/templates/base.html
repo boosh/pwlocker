@@ -33,7 +33,7 @@
                         {% if request.path == password_list_url %}
                         class="active"
                         {% endif %}
-                        ><a href="{{ password_list_url }}">{% trans "Passwords" %}</a></li>
+                        ><a href="{{ password_list_url }}">{% trans "Home" %}</a></li>
                 {% else %}
                     {% url registration_register as registration_register_url %}
                     <li
@@ -67,9 +67,7 @@
 </div>
 <div class="container">
     {% block container %}
-        <div class="content">
-            <br />
-            <br />
+        <div class="content" style="margin-top: 60px;">
             {% block content %}
             <h1 class="page-header">Password locker <small>{% trans "Demonstrating Django and Backbone.js" %}</small></h1>
 
