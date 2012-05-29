@@ -7,7 +7,8 @@ from djangorestframework import status
 from djangorestframework.views import ListOrCreateModelView, InstanceModelView, ModelView
 
 from apps.passwords.models import PasswordContact
-from apps.passwords.resources import PasswordResource, PasswordContactResource
+from apps.passwords.resources import PasswordResource, PasswordContactResource, \
+CurrentUserSingleton
 from apps.users.resources import UserResource
 
 
@@ -37,6 +38,20 @@ class PasswordListView(RestrictPasswordToUserMixin, ListOrCreateModelView):
     """
     resource = PasswordResource
     permissions = (IsAuthenticated, )
+
+    def initial(self, request, *args, **kwargs):
+        """
+        Set the currently authenticated user on the resource
+        """
+        CurrentUserSingleton.set_user(request.user)
+        return super(PasswordListView, self).initial(request, *args, **kwargs)
+
+    def final(self, request, response, *args, **kargs):
+        """
+        Clear the current user singleton to make sure it doesn't leak
+        """
+        CurrentUserSingleton.set_user(None)
+        return super(PasswordListView, self).final(request, response, *args, **kargs)
 
 
 class PasswordInstanceView(RestrictPasswordToUserMixin, InstanceModelView):

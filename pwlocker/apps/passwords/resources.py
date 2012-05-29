@@ -25,6 +25,18 @@ class PasswordContactResource(ModelResource):
         return super(PasswordContactResource, self).validate_request(data, files)
 
 
+class CurrentUserSingleton(object):
+    """
+    Literally the only way I can find to give the PasswordResource access
+    to the current user object.
+    """
+    user = None
+
+    @classmethod
+    def set_user(cls, user):
+        cls.user = user
+
+
 class PasswordResource(ModelResource):
     model = Password
     # by default, django rest framework won't return the ID - backbone.js
@@ -34,11 +46,18 @@ class PasswordResource(ModelResource):
     # django rest framework will overwrite our 'url' attribute with its own
     # that points to the resource, so we need to provide an alternative.
     include = ('resource_url',)
-    ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword', 'resource_url')
+    ignore_fields = ('created_at', 'updated_at', 'id', 'maskedPassword',
+        'resource_url', 'is_owner')
     fields = ('id', 'title', 'username', 'password', 'url', 'notes',
-        'resource_url', 'shares')
+        'resource_url', 'shares', 'is_owner')
 
     related_serializer = PasswordContactResource
+
+    def is_owner(self, instance):
+        """
+        Returns True if this resource was created by the current user.
+        """
+        return instance.created_by == CurrentUserSingleton.user
 
     def url(self, instance):
         """
