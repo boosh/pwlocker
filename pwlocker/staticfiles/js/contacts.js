@@ -23,6 +23,8 @@ $(function(){
             event.preventDefault();
             if (confirm("Are you sure you want to delete this contact?"))
             {
+                var that = this;
+                
                 this.model.remove({error: function(model, response) {
                         if (response.status == 403) {
                             alert("You don't have permission to delete that data");
@@ -30,6 +32,15 @@ $(function(){
                         else {
                             alert("Unable to delete that data");
                         }
+                    },
+                    success: function() {
+                        // update the form options - a little hacky, but oh well
+                        $('#passwordForm').find(':checkbox').remove();
+                        $('#passwordForm').find('.checkbox').remove();
+
+                        that.options.collection.each(function(data){
+                            $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
+                        });
                     }
                 });
             }
@@ -72,7 +83,7 @@ $(function(){
         },
 
         addOne: function(contact) {
-            this.$el.append(new ContactView({model: contact, app: this.options.app}).render().el);
+            this.$el.append(new ContactView({model: contact, collection: this.collection}).render().el);
             return this;
         },
 
@@ -137,18 +148,30 @@ $(function(){
 
             // perform a GET request to the userSearch service and if it
             // returns a user, create a new PasswordContact
-            $.getJSON('/api/1.0/user/' + username, function success(data, textStatus, jqXHR) {
-                that.dataList.addNew(data, {success: function() {
-                    $('#userSearch').val('');
+            $.ajax({
+                url: '/api/1.0/user/' + username,
+                dataType: 'json',
+                success: function(data, textStatus, jqXHR) {
+                    that.dataList.addNew(data, {success: function() {
+                        $('#userSearch').val('');
 
-                    // update the form options
-                    $('#passwordForm').find(':checkbox').remove();
-                    $('#passwordForm').find('.checkbox').remove();
+                        // update the form options
+                        $('#passwordForm').find(':checkbox').remove();
+                        $('#passwordForm').find('.checkbox').remove();
 
-                    that.dataList.collection.each(function(data){
-                        $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
-                    });
-                }});
+                        that.dataList.collection.each(function(data){
+                            $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
+                        });
+                    }});
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status) {
+                        alert("Sorry, we couldn't find that user");
+                    }
+                    else {
+                        alert("There was a problem searching for that user.");
+                    }
+                }
             });
 
             return this;

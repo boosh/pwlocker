@@ -23,5 +23,6 @@ class PasswordForm(ModelForm):
         # restrict the choice of users to share passwords with to a
         # user's PasswordContacts
         self.fields['shares'] = ModelMultipleChoiceField(
-            queryset=PasswordContact.objects.filter(from_user=user),
+            queryset=PasswordContact.objects.filter(from_user=user) \
+                .order_by('to_user__first_name'),
             widget=widgets.CheckboxSelectMultiple())
