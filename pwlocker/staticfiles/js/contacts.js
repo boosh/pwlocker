@@ -38,9 +38,13 @@ $(function(){
                         $('#passwordForm').find(':checkbox').remove();
                         $('#passwordForm').find('.checkbox').remove();
 
+                        var shareOptions = new Array();
+
                         that.options.collection.each(function(data){
-                            $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
+                            shareOptions.push(ich.shareOption(data.toJSON(), true));
                         });
+
+                        $(shareOptions.join('')).insertAfter('#id_notes');
                     }
                 });
             }
@@ -159,9 +163,13 @@ $(function(){
                         $('#passwordForm').find(':checkbox').remove();
                         $('#passwordForm').find('.checkbox').remove();
 
+                        var shareOptions = new Array();
+
                         that.dataList.collection.each(function(data){
-                            $(ich.shareOption(data.toJSON())).insertAfter('#id_notes');
+                            shareOptions.push(ich.shareOption(data.toJSON(), true));
                         });
+
+                        $(shareOptions.join('')).insertAfter('#id_notes');
                     }});
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
