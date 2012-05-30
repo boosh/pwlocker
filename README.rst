@@ -13,4 +13,4 @@ The code has the following dependencies:
     * setuptools
     * fabric
 
-Clone the repository, change into the `pwlocker` directory (containing `settings.py`). Open `settings.py` in your favourite text editor and update the database details to match a database you can connect to. Then just run `fab build` which will create a virtualenv and install all of the required dependencies.
+Clone the repository, change into the `pwlocker` directory (containing `settings.py`). Then just run `fab build` which will create a virtualenv, and sqlite database and install all of the required dependencies.
