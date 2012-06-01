@@ -55,7 +55,7 @@ def django_syncdb(project_dir, production=False):
 
     puts(success='Database synced')
 
-def django_syncdb_and_migrate(project_dir, production=False):
+def django_sync_and_migrate(project_dir, production=False):
     """
     Sets up the database by running django's syncdb command with
     --noinput and --migrate
