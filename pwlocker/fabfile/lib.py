@@ -73,6 +73,26 @@ def django_sync_and_migrate(project_dir, production=False):
 
     puts(success='Database synced')
 
+def django_load_fixture(project_dir, path):
+    """
+    Load fixtures from a specific location
+
+    @param project_dir The directory containing manage.py
+    @param production The path to the fixture file to load
+    """
+    puts(info="Loading fixture at %s" % path)
+
+    full_path = os.path.join(project_dir, path)
+
+    if not files.exists(full_path):
+        puts(error='Fixture file %s not found' % full_path)
+
+    with prefix(activate_venv()):
+        run(os.path.join(project_dir, 'manage.py') + " loaddata "
+            + full_path)
+
+    puts(success='Fixture loaded')
+
 def django_migrate_schema(project_dir, production=False):
     """
     Migrates the database schema

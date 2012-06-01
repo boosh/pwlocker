@@ -102,6 +102,7 @@ def deploy():
 #    django_syncdb(env.project_dir, True)
 #    django_migrate_schema(env.project_dir, True)
     django_sync_and_migrate(env.project_dir, True)
+    django_load_fixture(env.project_dir, 'fixtures/initial_data.json')
 
     django_publish_static_content(env.project_dir)
     roll_site_forward(os.path.dirname(env.project_root))

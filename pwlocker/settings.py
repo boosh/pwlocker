@@ -193,7 +193,3 @@ SESSION_COOKIE_AGE = 60*60
 SESSION_SAVE_EVERY_REQUEST = True
 
 APPEND_SLASH = False
-
-FIXTURE_DIRS = (
-    os.path.join(BASE_DIR, 'fixtures'),
-)
