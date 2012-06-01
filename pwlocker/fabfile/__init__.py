@@ -23,7 +23,7 @@ from lib import *
 #
 
 # path to git repository
-env.repo_path = 'fill me in'
+env.repo_path = 'git://github.com/boosh/pwlocker.git'
 
 # get the project name, e.g. healthcms
 env.project_name = os.path.basename(os.path.dirname(env.real_fabfile))
@@ -110,6 +110,49 @@ def deploy():
     restart_services()
     prune_directory(os.path.dirname(env.project_root), 2, 10)
     puts(success="Deployment finished")
+
+@task
+def in_place_deploy():
+    """
+    Update an existing production deployment of the site.
+    
+    Code will be updated, but dependencies will not be reinstalled.
+
+    @todo - make it keep track of the number of deploys/db backups
+      so it doesn't end up creating hundreds by mistake
+
+    @todo - Extend this so it will provision new servers by:
+       - installing nginx
+       - installing supervisord
+       - uploading base configurations using files.upload_template
+       - creating links in /etc/nginx/conf.d to the project config file
+       - doing the same for supervisord
+    """
+    env.user = 'deploy'
+
+    # where the .git directory is
+    env.project_root = os.path.realpath(os.path.join(
+        '/home', env.user, env.production_projects_directory,
+        env.project_name, 'live'))
+
+    __build_env_dictionary()
+
+    git_pull(env.project_root)
+
+    compile_less_css(env.project_dir)
+
+# this should only be run on the database server, and migrations should only
+# be run once (not on all web servers). Not an issue for now though.
+    backup_database(env.project_name, env.project_dir, env.database_backup_dir)
+    # from this point on, we're making changes that will affect the live site
+# perhaps we should display a banner to disable the site while we perform a
+# backup and migration...
+    django_syncdb(env.project_dir, True)
+    django_migrate_schema(env.project_dir, True)
+
+    django_publish_static_content(env.project_dir)
+    restart_services()
+    puts(success="In-place deployment finished")
 
 def __build_env_dictionary():
     """

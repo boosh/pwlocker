@@ -134,10 +134,13 @@ def compile_less_css(project_dir):
     Compiles less files to css
     """
     puts(info="Compiling LESS to css")
-    with cd(project_dir):
-        with prefix(activate_venv()):
-            run('./plessc.py')
-    puts(success="Stylesheets compiled")
+    if files.exists(os.path.join(project_dir, "plessc.py")):
+        with cd(project_dir):
+            with prefix(activate_venv()):
+                run('./plessc.py')
+                puts(success="Stylesheets compiled")
+    else:
+        puts(info="plessc.py not found - skipping")
 
 def conditionally_install_and_patch_pil(requirements_file_path, venv_dir,
         patch_path):

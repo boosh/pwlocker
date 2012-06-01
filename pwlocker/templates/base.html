@@ -99,8 +99,11 @@
 
                 <div class="span4">
                     <div class="well">
-                        <a href="{% url registration_register %}"
+                        <p>
+                            <a href="{% url registration_register %}"
                             class="btn btn-primary btn-large">Register</a>
+                        </p>
+                        <p>or <a href="{% url django.contrib.auth.views.login %}">log into a demo account</a>.</p>
                     </div>
                 </div>
             </div>

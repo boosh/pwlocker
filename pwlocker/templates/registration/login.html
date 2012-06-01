@@ -9,6 +9,15 @@
             <p><strong>{% trans "Log-in error!" %}</strong> {% trans "The details you entered were incorrect. Note that both fields are case-sensitive." %}</p>
         </div>
     {% endif %}
+
+    <div class="alert alert-info">
+        <p>The following demo user accounts are available (username/password):</p>
+        <ul>
+            <li>demo/asdfasdf</li>
+            <li>demo2/asdfasdf</li>
+        </ul>
+    </div>
+
     <form action="{% url django.contrib.auth.views.login %}" method="post" id="login-form">{% csrf_token %}
         <fieldset>
             <legend>{% trans 'Log in' %} (<a href="{% url registration_register %}">{% trans 'Sign up' %}</a>)</legend>
