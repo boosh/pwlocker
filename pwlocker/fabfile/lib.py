@@ -21,9 +21,7 @@ def create_virtualenv(venv_path, user, permissions='0750'):
     if not files.exists(os.path.join(venv_path, "bin/activate")):
         create_directories(venv_path, user, permissions)
         puts(info='Creating virtualenv at %s' % venv_path)
-        # need to give access to system site packages for Python 2.4.3 which
-        # uses pysqlite2 instead
-        run("virtualenv --system-site-packages %s" % venv_path)
+        run("virtualenv --no-site-packages %s" % venv_path)
         puts(success='virtualenv created')
         return 1
     else:
