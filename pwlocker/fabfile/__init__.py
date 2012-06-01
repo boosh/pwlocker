@@ -96,9 +96,6 @@ def deploy():
     install_pip_dependencies(env.requirements_path)
     compile_less_css(env.project_dir)
 
-# this should only be run on the database server, and migrations should only
-# be run once (not on all web servers). Not an issue for now though.
-    backup_database(env.project_name, env.project_dir, env.database_backup_dir)
     # from this point on, we're making changes that will affect the live site
 # perhaps we should display a banner to disable the site while we perform a
 # backup and migration...
@@ -141,9 +138,6 @@ def in_place_deploy():
 
     compile_less_css(env.project_dir)
 
-# this should only be run on the database server, and migrations should only
-# be run once (not on all web servers). Not an issue for now though.
-    backup_database(env.project_name, env.project_dir, env.database_backup_dir)
     # from this point on, we're making changes that will affect the live site
 # perhaps we should display a banner to disable the site while we perform a
 # backup and migration...
