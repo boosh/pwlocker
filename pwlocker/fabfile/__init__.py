@@ -99,8 +99,9 @@ def deploy():
     # from this point on, we're making changes that will affect the live site
 # perhaps we should display a banner to disable the site while we perform a
 # backup and migration...
-    django_syncdb(env.project_dir, True)
-    django_migrate_schema(env.project_dir, True)
+#    django_syncdb(env.project_dir, True)
+#    django_migrate_schema(env.project_dir, True)
+    django_sync_and_migrate(env.project_dir, True)
 
     django_publish_static_content(env.project_dir)
     roll_site_forward(os.path.dirname(env.project_root))
@@ -141,8 +142,9 @@ def in_place_deploy():
     # from this point on, we're making changes that will affect the live site
 # perhaps we should display a banner to disable the site while we perform a
 # backup and migration...
-    django_syncdb(env.project_dir, True)
-    django_migrate_schema(env.project_dir, True)
+    django_sync_and_migrate(env.project_dir, True)
+#    django_syncdb(env.project_dir, True)
+#    django_migrate_schema(env.project_dir, True)
 
     django_publish_static_content(env.project_dir)
     restart_services()

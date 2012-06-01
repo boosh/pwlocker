@@ -55,6 +55,24 @@ def django_syncdb(project_dir, production=False):
 
     puts(success='Database synced')
 
+def django_syncdb_and_migrate(project_dir, production=False):
+    """
+    Sets up the database by running django's syncdb command with
+    --noinput and --migrate
+
+    @param project_dir The directory containing manage.py
+    @param production Whether to use production settings
+    """
+    puts(info="Running syncdb with --migrate")
+    with prefix(activate_venv()):
+        if production == True:
+            run(os.path.join(project_dir, 'manage.py') + " syncdb "
+                "--settings=settings_production --migrate --noinput")
+        else:
+            run(os.path.join(project_dir, 'manage.py') + ' syncdb --migrate --noinput')
+
+    puts(success='Database synced')
+
 def django_migrate_schema(project_dir, production=False):
     """
     Migrates the database schema
