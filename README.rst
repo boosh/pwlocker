@@ -19,10 +19,10 @@ Detailed installation instructions
 ----------------------------------
 The following was tested on Fedora 17:
 
-    git clone git@github.com:boosh/pwlocker.git
-    cd pwlocker/pwlocker
-    fab build
-    source ../venv/bin/activate
-    ./manage.py runserver
+    * git clone git@github.com:boosh/pwlocker.git
+    * cd pwlocker/pwlocker
+    * fab build
+    * source ../venv/bin/activate
+    * ./manage.py runserver
 
 Then go to http://127.0.0.1:8000/ to view the site.
